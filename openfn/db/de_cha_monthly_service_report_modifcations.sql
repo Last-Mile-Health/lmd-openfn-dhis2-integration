@@ -1,3 +1,5 @@
+use lastmile_develop;
+
 alter table de_cha_monthly_service_report
 add column meta_last_edit_user varchar(100) 
 after meta_fabricated;
