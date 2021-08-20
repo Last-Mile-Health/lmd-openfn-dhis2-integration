@@ -1,3 +1,7 @@
+/* 
+    See sample input state data at:
+    https://github.com/dsurrao/LMD-dhis2/tree/main/openfn/msr-save-to-mysql/sample-data/state.json
+*/
 alterState(state => {
     let DHIS2_CODES = {
         'meta_de_init': 'xoFwJwrWLu2', 'meta_de_date': 'NHzol7Puj50',
@@ -90,19 +94,15 @@ alterState(state => {
         return organisationUnits.find(e => e.id == orgUnit);
     }
 
-    function getOrgUnitName(organisationUnits, orgUnit) {
-        let el = getOrgUnitElem(organisationUnits, orgUnit);
-        return el != undefined ? el.name : null;
-    }
-
     /*
-    Returns [chss, facility, district]
+    Returns [cha, chss, facility, district]
     */
-    function getCHSSFacilityAndDistrict(organisationUnits, chaOrgUnit) {
-        let chss, facility, district;
+    function getOrgUnitNames(organisationUnits, chaOrgUnit) {
+        let cha, chss, facility, district;
         let chssEl, facilityEl, districtEl;
         let chaEl = getOrgUnitElem(organisationUnits, chaOrgUnit);
         if (chaEl != undefined && chaEl.parent) {
+            cha = chaEl.name;
             chssEl = getOrgUnitElem(organisationUnits, chaEl.parent.id);
             if (chssEl != undefined) {
                 chss = chssEl.name;
@@ -120,7 +120,7 @@ alterState(state => {
                 }
             }
         }
-        return [chss, facility, district];
+        return [cha, chss, facility, district];
     }
 
     /* form data is valid if at least one field is not empty */
@@ -142,13 +142,13 @@ alterState(state => {
         let orgUnit, orgUnitData;
         let period, periodData;
         let columnNames;
-        let chss, facility, district;
+        let cha, chss, facility, district;
 
         // lopp through org units
         for (var i = 0; i < reorganizedData.length; i++) {
             orgUnit = reorganizedData[i]['orgUnit'];
             orgUnitData = reorganizedData[i]['data'];
-            [chss, facility, district] = getCHSSFacilityAndDistrict(organisationUnits,
+            [cha, chss, facility, district] = getOrgUnitNames(organisationUnits,
                 orgUnit);
             // loop through periods and create a row for each period
             for (var j = 0; j < orgUnitData.length; j++) {
@@ -162,7 +162,7 @@ alterState(state => {
                     'meta_last_edit_user': getMostRecent(periodData, 'storedBy'),
                     'month_reported': period.substring(4, 6),
                     'year_reported': period.substring(0, 4),
-                    'cha_id': getOrgUnitName(organisationUnits, orgUnit),
+                    'cha_id': cha,
                     'chss_id': chss,
                     'health_facility': facility,
                     'district': district,
