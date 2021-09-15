@@ -1,6 +1,6 @@
 getMetadata(['organisationUnits'], {});
 
-alterState(state => {
+fn(state => {
     return {...state, organisationUnits: state.data.organisationUnits};
 })
 
@@ -25,13 +25,13 @@ getDataValues({
             }
             return periods;
         }
-        return getMostRecentPeriods(3).toString();
+        return getMostRecentPeriods(4).toString();
     },
     dataSet: 'IBhezUyCB5Q', // CHA Monthly Service Report
     includeDeleted: true
 });
 
-alterState(state => {
-    console.log(state);
-    return state;
+fn(state => {
+  delete state.references;
+  return state;
 })
