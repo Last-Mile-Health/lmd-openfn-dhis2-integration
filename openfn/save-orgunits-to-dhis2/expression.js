@@ -75,7 +75,7 @@ alterState(state => {
 
 
 post(
-    'api/metadata?classKey=ORGANISATION_UNIT', 
+    '/api/metadata?classKey=ORGANISATION_UNIT', 
     {
         body: state => {
             return state.metadataCSV;
