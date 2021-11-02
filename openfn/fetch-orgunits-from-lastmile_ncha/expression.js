@@ -1,3 +1,4 @@
+/* fetch org units */
 query({
     sql: state => {
       return `select county, county_id, health_district_id, health_district, 

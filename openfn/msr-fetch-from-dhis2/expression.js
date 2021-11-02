@@ -4,7 +4,7 @@ fn(state => {
     return {...state, organisationUnits: state.data.organisationUnits};
 })
 
-/* get monthly service report data */
+/* fetch monthly service report data */
 getDataValues({
     orgUnitGroup: 'iQHIwRQ8Dqf', // CHA
     period: (state) => {
