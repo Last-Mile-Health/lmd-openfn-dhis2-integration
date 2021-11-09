@@ -25,7 +25,7 @@ getDataValues({
             }
             return periods;
         }
-        return getMostRecentPeriods(4).toString();
+        return getMostRecentPeriods(8).toString();
     },
     dataSet: 'IBhezUyCB5Q', // CHA Monthly Service Report
     includeDeleted: true
