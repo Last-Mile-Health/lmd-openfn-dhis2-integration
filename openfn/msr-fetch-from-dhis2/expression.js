@@ -8,6 +8,8 @@ fn(state => {
 getDataValues({
     orgUnitGroup: 'iQHIwRQ8Dqf', // CHA
     period: (state) => {
+        /* get data for the last eight months */
+        let NUM_PERIODS = 8;
         /*
         * e.g. getMostRecentPeriods(2) returns [ '202107', '202106' ]
         * if the current date is in July 2021
@@ -25,7 +27,7 @@ getDataValues({
             }
             return periods;
         }
-        return getMostRecentPeriods(8).toString();
+        return getMostRecentPeriods(NUM_PERIODS).toString();
     },
     dataSet: 'IBhezUyCB5Q', // CHA Monthly Service Report
     includeDeleted: true
