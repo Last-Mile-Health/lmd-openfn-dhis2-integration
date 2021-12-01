@@ -41,7 +41,8 @@ alterState(state => {
 
     /* 
         reorganize data hierarchically by one or more keys.
-        an example of how this works can be found in scratchpad.js
+        an example of how this works can be found at
+        https://github.com/dsurrao/LMD-dhis2/blob/main/openfn/msr-save-to-mysql/scratchpad.js
     */
     function reorganizeData(data, keys) {
         let newData = [];
