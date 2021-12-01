@@ -1,6 +1,9 @@
 /* 
+    Saves data from the 'msr-fetch-from-dhis2' job to a MySQL database.
     See sample input state data at:
     https://github.com/dsurrao/LMD-dhis2/tree/main/openfn/msr-save-to-mysql/sample-data/state.json
+
+
 */
 alterState(state => {
     let DHIS2_CODES = {
@@ -36,7 +39,10 @@ alterState(state => {
         '4_1_f_ltfu_tb_clients_traced': 'eMAINMpG8oz'
     };
 
-    // reorganize data hierarchically by one or more keys
+    /* 
+        reorganize data hierarchically by one or more keys.
+        an example of how this works can be found in scratchpad.js
+    */
     function reorganizeData(data, keys) {
         let newData = [];
         let keyName, keyVal;
@@ -95,7 +101,8 @@ alterState(state => {
     }
 
     /*
-    Returns [cha, chss, facility, district]
+    Returns [cha, chss, facility, district] for a given CHA 
+    by traversing the organization unit hierarchy in state.organisationUnits
     */
     function getOrgUnitNames(organisationUnits, chaOrgUnit) {
         let cha, chss, facility, district;
@@ -129,10 +136,29 @@ alterState(state => {
         return !columnNames.every(c => dataValueByCode(periodData, dhis2Codes[c]) == null);
     }
 
-    /* Returns an array of the form below that can be passed to upsertMany()
+    /* 
+        Returns an array of the form below that can be passed to upsertMany().
+        Each item in the array represents a row for a unique CHA MSR/period 
+        to be saved to the table 'de_cha_monthly_service_report':
+
         [
-            { meta_uuid: 'kwIzfzpJ82z', cha_name: 'Dominic Surraos', ... },
-            { meta_uuid: 'plPz2j9VSIz', cha_name: 'James Test', ... },
+            { 
+                meta_uuid: 'kwIzfzpJ82z', 
+                meta_data_source: 'Dominic Surrao',
+                meta_last_edit_user: '...',
+                month_reported: '...',
+                year_reported: '...',
+                cha_id: '...',
+                chss_id: '...',
+                health_facility: '...',
+                valid: '...',
+                <data element column name>: <data element value>,
+                <data element column name>: <data element value>,
+                ...
+            },
+            {
+                ...
+            },
             ...
         ]
     */
@@ -144,13 +170,16 @@ alterState(state => {
         let columnNames;
         let cha, chss, facility, district;
 
-        // lopp through org units
+        // lopp through CHA org units
         for (var i = 0; i < reorganizedData.length; i++) {
             orgUnit = reorganizedData[i]['orgUnit'];
             orgUnitData = reorganizedData[i]['data'];
+
+            // get the org unit names associated with this this CHA
             [cha, chss, facility, district] = getOrgUnitNames(organisationUnits,
                 orgUnit);
-            // loop through periods and create a row for each period
+
+            // loop through periods and create a row for each CHA and period
             for (var j = 0; j < orgUnitData.length; j++) {
                 period = orgUnitData[j]['period'];
                 periodData = orgUnitData[j]['data'];
