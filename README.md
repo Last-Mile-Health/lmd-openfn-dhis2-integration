@@ -5,4 +5,4 @@ This repo contains
 - OpenFn code used to export data from DHIS2 to MySQL
 - MySQL db definition updates to target tables
 
-More information in the [wiki](https://github.com/dsurrao/LMD-dhis2/wiki)
+More information in the [wiki](https://lastmilehealth.slite.com/app/docs/WNQV0zLGxGSuDu)
